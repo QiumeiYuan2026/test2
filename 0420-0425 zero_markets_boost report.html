@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERO Markets 投放复盘报告 Apr 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111418;
+    --bg3: #181c22;
+    --bg4: #1e2329;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8eaed;
+    --text2: #9aa0ac;
+    --text3: #5c6370;
+    --blue: #4f9ef8;
+    --blue-dim: rgba(79,158,248,0.15);
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.15);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.15);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.15);
+    --red: #f87171;
+    --teal: #22d3ee;
+    --accent: #4f9ef8;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  /* Layout */
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* Header */
+  .header {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .header-meta { color: var(--text2); font-size: 13px; }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .kpi-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .kpi-card .lb { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  .kpi-card .vl { font-size: 26px; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
+  .kpi-card .sb { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* Section */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    background: var(--blue-dim);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: .06em;
+  }
+  .section-title { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
+
+  /* Sub section */
+  .sub-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Chart card */
+  .chart-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .chart-wrap { position: relative; width: 100%; }
+  .chart-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  /* Legend */
+  .leg { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Insight box */
+  .insight {
+    background: var(--bg3);
+    border-left: 2px solid var(--blue);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+  .insight strong { color: var(--text); font-weight: 500; }
+
+  /* Two col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; margin: 10px 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { font-size: 10.5px; font-weight: 500; color: var(--text3); border-bottom: 1px solid var(--border); padding: 7px 10px; text-align: left; text-transform: uppercase; letter-spacing: .06em; }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Badges */
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 500; font-family: 'DM Mono', monospace; }
+  .bb { background: rgba(79,158,248,.18); color: #7bb8fb; }
+  .bg { background: rgba(52,211,153,.18); color: #5ddfa8; }
+  .ba { background: rgba(251,191,36,.18); color: #fbc840; }
+  .bp { background: rgba(167,139,250,.18); color: #b8a2fc; }
+
+  /* Priority cards */
+  .pri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 20px; }
+  .pri-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+  }
+  .pri-card.featured { border-color: rgba(52,211,153,.4); }
+  .pri-tag { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+  .pri-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .pri-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* Advice cards */
+  .adv-grid { display: grid; gap: 10px; margin: 10px 0; }
+  .adv-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .adv-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .adv-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+  .adv-body { font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+  em { color: var(--text); font-style: normal; }
+
+  /* Tracking table card */
+  .track-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .track-card table { margin: 0; }
+  .track-card th, .track-card td { padding: 9px 14px; }
+  .track-card th { background: var(--bg3); }
+
+  /* Nav tabs */
+  .part-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .part-btn {
+    font-size: 13px;
+    color: var(--text2);
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: 'DM Sans', sans-serif;
+    transition: color .2s;
+  }
+  .part-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .part-btn:hover { color: var(--text); }
+  .part-panel { display: none; }
+  .part-panel.active { display: block; }
+
+  /* Footnote */
+  .fn { font-size: 10.5px; color: var(--text3); margin: 3px 0 8px; }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    .pri-grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 26px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-tag">Social Media Campaign Review · ZERO Markets</div>
+    <h1>投放效能复盘报告</h1>
+    <div class="header-meta">Apr 20–25, 2026 &nbsp;·&nbsp; IG Boost vs Meta Ads &nbsp;·&nbsp; Post vs Reel &nbsp;·&nbsp; 总消耗 $107.87</div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="lb">总消耗</div>
+        <div class="vl">$107.87</div>
+        <div class="sb">Meta $74.93 · IG $32.85</div>
+      </div>
+      <div class="kpi-card">
+        <div class="lb">总点击</div>
+        <div class="vl">5,844</div>
+        <div class="sb">Meta 5,337 · IG 507</div>
+      </div>
+      <div class="kpi-card">
+        <div class="lb">总展示</div>
+        <div class="vl">487K</div>
+        <div class="sb">Meta 443K · IG 44K</div>
+      </div>
+      <div class="kpi-card">
+        <div class="lb">总涨粉</div>
+        <div class="vl">84</div>
+        <div class="sb">IG 83 · Meta 1</div>
+      </div>
+      <div class="kpi-card">
+        <div class="lb">整体 CPC</div>
+        <div class="vl">$0.018</div>
+        <div class="sb">Meta $0.014 · IG $0.087</div>
+      </div>
+      <div class="kpi-card">
+        <div class="lb">注册转化</div>
+        <div class="vl">1</div>
+        <div class="sb">Meta Ads 落地页</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART NAV -->
+  <div class="part-nav">
+    <button class="part-btn active" onclick="showPart('part1',this)">Part 1 — 宏观渠道效能</button>
+    <button class="part-btn" onclick="showPart('part2',this)">Part 2 — 微观内容表现</button>
+    <button class="part-btn" onclick="showPart('part3',this)">优化建议</button>
+  </div>
+
+  <!-- ===== PART 1 ===== -->
+  <div id="part1" class="part-panel active">
+
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">渠道综合效能对比</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">总量指标对比（柱状图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#4f9ef8"></span>Meta Ads</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#34d399"></span>IG Boost</div>
+        </div>
+        <div class="chart-wrap" style="height:270px">
+          <canvas id="c1" role="img" aria-label="Meta Ads 与 IG Boost 渠道综合效能柱状图对比，含花费、点击量、展示量、主页访问和粉丝增长">Meta Ads: 花费$74.93, 点击5337, 展示443K, 主页485, 粉丝1. IG Boost: 花费$32.85, 点击507, 展示44K, 主页429, 粉丝83.</canvas>
+        </div>
+      </div>
+      <div class="insight">
+        本次测试通过 $107.87 的低预算完成了对 IG Boost 与 Meta Ads Manager 的效能对比。<strong>渠道胜出者：</strong>Meta Ads Manager 在流量获取效率（CTR、CPC）上具有压倒性优势，尤其在 Reel 内容转化上表现突出。<strong>内容胜出者：</strong>Reel 展现极强点击诱导能力，而 Post 在 IG Boost 渠道下展现了更好的粉丝转化粘性。Meta 算法更倾向于将预算分配给互动率高的视频内容；若目标是低成本引流，Meta Ads Reel 是首选；若目标是账号深度增粉，IG Boost Post 更具优势。
+      </div>
+
+      <div class="section-header" style="margin-top:8px">
+        <span class="section-num">02</span>
+        <span class="section-title">曝光份额对比</span>
+      </div>
+
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-label">展示份额 (Impressions)</div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="c2" role="img" aria-label="展示份额饼图：Meta Ads 90.9%，IG Boost 9.1%">Meta Ads 90.9%, IG Boost 9.1%.</canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-label">受众覆盖 (Reach)</div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="c3" role="img" aria-label="受众覆盖份额饼图：Meta Ads 93%，IG Boost 7%">Meta Ads 93%, IG Boost 7%.</canvas>
+          </div>
+        </div>
+      </div>
+      <div class="insight">在相同量级的初始及追加预算设置下，Meta Ads 凭借更优的算法竞价获得了全场 <strong>90% 以上的曝光权重</strong>与 93% 的受众覆盖，体现出平台算法对高互动内容的大幅倾斜。</div>
+
+      <div class="section-header" style="margin-top:8px">
+        <span class="section-num">03</span>
+        <span class="section-title">CPC 每日趋势</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">单次点击成本走势 Apr 20–25（折线图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#4f9ef8;border-radius:0"></span>Meta Ads Reel（Apr 21–25）</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#4f9ef8;opacity:.5;border-radius:0;outline:1px dashed #4f9ef8;outline-offset:1px"></span>Meta Ads Post（Apr 21–23）</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#34d399;border-radius:0"></span>IG Boost Post（Apr 20–25）</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#fbbf24;border-radius:0"></span>IG Boost Reel（Apr 20–23）</div>
+        </div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="c4" role="img" aria-label="四条帖子每日 CPC 趋势折线图，Meta Ads 维持低位，IG Boost Reel 持续攀升至 $0.184">Meta Ads Reel CPC $0.005–$0.022; Meta Ads Post仅Apr21-23; IG Boost Post $0.046–$0.061; IG Boost Reel $0.097→$0.184.</canvas>
+        </div>
+      </div>
+      <div class="insight">Meta Ads 的成本曲线<strong>极度稳定且低廉</strong>（$0.005–$0.022），而 IG Boost Reel 的 CPC 随时间持续攀升（$0.097→$0.184），缺乏算法自动优化的稳定性。Meta Ads Post 仅在 Apr 21–23 有消耗记录，Apr 24/25 已停止。</div>
+
+      <div class="section-header" style="margin-top:8px">
+        <span class="section-num">04</span>
+        <span class="section-title">追踪链接点击汇总</span>
+      </div>
+
+      <div class="track-card">
+        <table>
+          <thead><tr><th>类型</th><th>UTM 活动</th><th>Sessions</th><th>Engaged</th><th>参与率</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge bb">Meta Ads CTA</span></td><td>Reel – Growth or Value</td><td>2,944</td><td>2,926</td><td>99.4%</td></tr>
+            <tr><td><span class="badge bb">Meta Ads CTA</span></td><td>Post – Successful Trading</td><td>481</td><td>477</td><td>99.2%</td></tr>
+            <tr><td><span class="badge bg">Link in Bio</span></td><td>Linktree – Website</td><td>22</td><td>19</td><td>86.4%</td></tr>
+            <tr><td><span class="badge bg">Link in Bio</span></td><td>WTC Q1 EN Post</td><td>8</td><td>8</td><td>100%</td></tr>
+            <tr><td><span class="badge bg">Link in Bio</span></td><td>Linktree – APP Invitation</td><td>6</td><td>5</td><td>83.3%</td></tr>
+            <tr><td><span class="badge bg">Link in Bio</span></td><td>Linktree – Portal</td><td>0</td><td>0</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight">Meta Ads CTA 链接贡献了 <strong>3,425 次高质量 Session</strong>（参与率 99%+），IG Boost Link in Bio 仅带来 36 次，转化效率相差 95 倍。1 次最终注册说明落地页是当前最核心的优化瓶颈。</div>
+    </div>
+
+  </div><!-- end part1 -->
+
+  <!-- ===== PART 2 ===== -->
+  <div id="part2" class="part-panel">
+
+    <!-- 2.1 Post A -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">内容 A · Post「Successful Trading」— 渠道对比</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">Meta Ads vs IG Boost 各指标对比（柱状图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#4f9ef8"></span>Meta Ads Post</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#34d399"></span>IG Boost Post</div>
+        </div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="c5" role="img" aria-label="Post 内容两渠道各指标对比柱状图">Meta Ads: 花费$11.19 点击1074 互动44 主页访问408 粉丝1. IG Boost: 花费$21.43 点击426 互动130 主页访问429 粉丝37.</canvas>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>渠道</th><th>总花费</th><th>总点击</th><th>CPC</th><th>CPM</th><th>互动</th><th>主页访问</th><th>粉丝增长</th><th>涨粉成本</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge bb">Meta Ads</span></td><td>$11.19</td><td>1,074</td><td>$0.010</td><td>$0.056</td><td>44</td><td>408</td><td>1</td><td>$11.19</td></tr>
+            <tr><td><span class="badge bg">IG Boost</span></td><td>$21.43</td><td>426</td><td>$0.050</td><td>$0.513</td><td>130</td><td>429</td><td>37</td><td>$0.58</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight">同一 Post 内容，Meta Ads 以一半成本产生 2.5 倍点击（CPC $0.010 vs $0.050）。但 IG Boost 的互动次数高出 3 倍（130 vs 44），主页访问量相近（429 vs 408），且带来 <strong>37 个粉丝增长（涨粉成本仅 $0.58）</strong>，Meta Ads 仅得 1 个（$11.19/粉）。涨粉阶段应以 IG Boost + Post 为核心资源，受众更愿意为深度干货内容留下。</div>
+    </div>
+
+    <!-- 2.2 Reel B -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">内容 B · Reel「Growth vs. Value」— 渠道对比</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">Meta Ads vs IG Boost 各指标对比（柱状图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#a78bfa"></span>Meta Ads Reel</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#fbbf24"></span>IG Boost Reel</div>
+        </div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="c6" role="img" aria-label="Reel 内容两渠道各指标对比柱状图">Meta Ads: 花费$63.74 点击4263 互动38 主页访问77 粉丝0. IG Boost: 花费$11.42 点击81 互动83 主页访问76 粉丝46.</canvas>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>渠道</th><th>总花费</th><th>总点击</th><th>CPC</th><th>CPM</th><th>互动†</th><th>主页访问†</th><th>粉丝增长†</th><th>追踪链接</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge bp">Meta Ads</span></td><td>$63.74</td><td>4,263</td><td>$0.015</td><td>$0.263</td><td>38</td><td>77</td><td>0</td><td>2,944</td></tr>
+            <tr><td><span class="badge ba">IG Boost</span></td><td>$11.42</td><td>81</td><td>$0.141</td><td>$4.318</td><td>83</td><td>76</td><td>46</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fn">† IG Boost Reel 互动 / 主页访问 / 粉丝增长数据来自 Apr 22 单日记录，其余日期无该字段数据</p>
+      <div class="insight">Meta Ads 预算消耗明显更高（$63.74 vs $11.42），但产生了 52.6 倍点击与 <strong>2,944 次追踪链接 Session</strong>（参与率 99.4%），是最优引流工具。IG Boost Reel 的 CPM 高达 $4.32（是 Meta Ads 的 16 倍），但 Apr 22 单日带来 46 个高质量粉丝增长。在 Meta Ads 渠道下，Reel 的 CTR（1.76%）远高于 Post（0.54%）——若目标是引流，视频更有优势；若目标是主页留存，图文更占上风。</div>
+
+      <!-- Priority cards -->
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin:0 0 10px">涨粉路径综合优先级</div>
+      <div class="pri-grid">
+        <div class="pri-card featured">
+          <span class="pri-tag" style="background:rgba(52,211,153,.18);color:#5ddfa8">第一优先级</span>
+          <div class="pri-title">IG Boost + Post「Successful Trading」</div>
+          <div class="pri-body">涨粉成本 <strong style="color:#34d399">$0.58/粉</strong>（目标优化至 ≤$0.33）<br>主页访问 429 次 · 互动 130 次<br>教育图文触发用户深度关注，单位点击转化主页访问效率最高</div>
+        </div>
+        <div class="pri-card">
+          <span class="pri-tag" style="background:rgba(251,191,36,.18);color:#fbc840">第二优先级</span>
+          <div class="pri-title">IG Boost + Reel「Growth vs. Value」</div>
+          <div class="pri-body">涨粉成本 <strong style="color:#fbbf24">$0.25/粉*</strong><br>互动 83 次 · 主页访问 76 次<br>高质量精准互动，视频提升账号活跃度权重<br><span style="font-size:10.5px;color:var(--text3)">*仅 Apr 22 单日，需更多日期验证</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.3 Reel retention -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">Reel 视频留存漏斗</span>
+      </div>
+
+      <div class="two-col">
+        <div class="chart-card">
+          <div class="chart-label">各节点留存率（水平柱状图）</div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="c7" role="img" aria-label="Reel 视频各节点留存率，25%基准100%，50%降至40.3%，75%降至24.4%，95%降至18.6%">25%:100%; 50%:40.3%; 75%:24.4%; 95%:18.6%; 3秒率:11.78%.</canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-label">各阶段观众分布（饼图）</div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="c7b" role="img" aria-label="Reel 各留存阶段观众分布饼图">完整看完18.6%; 75-95%段流失5.8%; 50-75%段流失15.9%; 25-50%段流失59.7%.</canvas>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>节点</th><th>播放次数</th><th>留存率</th><th>环比流失</th></tr></thead>
+          <tbody>
+            <tr><td>3秒率（÷展示量）</td><td>—</td><td>11.78%</td><td>—</td></tr>
+            <tr><td>25% 进度</td><td>6,784</td><td>100%（基准）</td><td>—</td></tr>
+            <tr><td>50% 进度</td><td>2,735</td><td>40.3%</td><td style="color:#f87171;font-weight:500">−59.7%</td></tr>
+            <tr><td>75% 进度</td><td>1,654</td><td>24.4%</td><td style="color:#f87171">−15.9%</td></tr>
+            <tr><td>95% 进度</td><td>1,260</td><td>18.6%</td><td style="color:#fbbf24">−5.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight">视频在 3 秒率（11.78%）表现尚可，但 <strong>25%→50% 区间出现断崖式流失（−59.7%）</strong>，说明前 3 秒的钩子能吸引初始播放，但中段内容节奏偏硬核、切换过慢。需优化前 10 秒的留存逻辑——在视频 5–10 秒处加入强交互视觉，将增长股 vs 价值股核心结论前置至视频前 1/3。</div>
+    </div>
+
+    <!-- 2.4a IG Boost Post vs Reel -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">04a</span>
+        <span class="section-title">IG Boost 渠道内 · Post vs. Reel 趋势对比</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">每日花费与点击量趋势（双轴折线图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#34d399;border-radius:0"></span>IG Post 花费</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#fbbf24;border-radius:0"></span>IG Reel 花费</div>
+          <div class="leg-item" style="opacity:.6"><span class="leg-dot" style="background:#34d399;border-radius:0;outline:1px dashed #34d399;outline-offset:1px"></span>IG Post 点击（右轴）</div>
+          <div class="leg-item" style="opacity:.6"><span class="leg-dot" style="background:#fbbf24;border-radius:0;outline:1px dashed #fbbf24;outline-offset:1px"></span>IG Reel 点击（右轴）</div>
+        </div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="c8" role="img" aria-label="IG Boost Post 与 Reel 每日花费和点击量双轴趋势图">IG Post花费均匀Apr20$1.77-Apr25$2.18; IG Reel仅Apr20-23花费$1.07-$4.66后停止.</canvas>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>内容</th><th>总花费</th><th>总点击</th><th>CPC</th><th>CPM</th><th>互动</th><th>主页访问</th><th>粉丝增长</th><th>涨粉成本</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge bg">Post</span></td><td>$21.43</td><td>426</td><td>$0.050</td><td>$0.513</td><td>130</td><td>429</td><td>37</td><td>$0.58</td></tr>
+            <tr><td><span class="badge ba">Reel</span></td><td>$11.42</td><td>81</td><td>$0.141</td><td>$4.318</td><td>83†</td><td>76†</td><td>46†</td><td>$0.25†</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fn">† IG Boost Reel 互动/主页访问/粉丝增长仅 Apr 22 单日记录</p>
+      <div class="insight">在 IG Boost 渠道内，Post 的主页访问量（429）是 Reel（76）的近 <strong>5.6 倍</strong>，互动次数（130 vs 83）更高，且 CPM 仅 $0.51（是 Reel 的 1/8）。教育图文内容更能触发用户「关注」动机，IG Boost 预算应优先投入 Post。</div>
+    </div>
+
+    <!-- 2.4b Meta Ads Post vs Reel -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">04b</span>
+        <span class="section-title">Meta Ads 渠道内 · Post vs. Reel 趋势对比</span>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-label">每日花费与点击量趋势（双轴折线图）</div>
+        <div class="leg">
+          <div class="leg-item"><span class="leg-dot" style="background:#4f9ef8;border-radius:0"></span>Meta Post 花费</div>
+          <div class="leg-item"><span class="leg-dot" style="background:#a78bfa;border-radius:0"></span>Meta Reel 花费</div>
+          <div class="leg-item" style="opacity:.6"><span class="leg-dot" style="background:#4f9ef8;border-radius:0;outline:1px dashed #4f9ef8;outline-offset:1px"></span>Meta Post 点击（右轴）</div>
+          <div class="leg-item" style="opacity:.6"><span class="leg-dot" style="background:#a78bfa;border-radius:0;outline:1px dashed #a78bfa;outline-offset:1px"></span>Meta Reel 点击（右轴）</div>
+        </div>
+        <div class="chart-wrap" style="height:260px">
+          <canvas id="c9" role="img" aria-label="Meta Ads Post 与 Reel 每日花费和点击量双轴趋势图">Meta Reel Apr23峰值花费$25.99点击1228; Meta Post仅Apr21-23.</canvas>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>内容</th><th>总花费</th><th>总点击</th><th>CPC</th><th>CPM</th><th>CTR</th><th>互动</th><th>主页访问</th><th>追踪链接</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge bb">Post</span></td><td>$11.19</td><td>1,074</td><td>$0.010</td><td>$0.056</td><td>0.54%</td><td>44</td><td>408</td><td>481</td></tr>
+            <tr><td><span class="badge bp">Reel</span></td><td>$63.74</td><td>4,263</td><td>$0.015</td><td>$0.263</td><td>1.76%</td><td>38</td><td>77</td><td>2,944</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight">在 Meta Ads 渠道内，Reel 的 CTR（1.76%）是 Post（0.54%）的 <strong>3.3 倍</strong>，追踪链接点击（2,944 vs 481）高出 6 倍——引流注册首选 Reel。但 Post 的主页访问量（408 vs 77）高出 5.3 倍，CPC 与 CPM 更低，更适合品牌认知与账号留存目标。两者在 Meta Ads 内各司其职，应根据当期核心 KPI 灵活组合。</div>
+    </div>
+
+  </div><!-- end part2 -->
+
+  <!-- ===== PART 3: ADVICE ===== -->
+  <div id="part3" class="part-panel">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">—</span>
+        <span class="section-title">专业优化建议</span>
+      </div>
+
+      <div class="adv-grid">
+        <div class="adv-card">
+          <span class="adv-num" style="background:rgba(52,211,153,.18);color:#5ddfa8">01</span>
+          <div>
+            <div class="adv-title">主攻涨粉：强化 IG Boost Post 投放</div>
+            <div class="adv-body">筛选自然流下综合表现较好的帖子进行 Boost，初始预算提高至 <em>$10/天</em>，两天后追踪数据——涨粉成本 ≤$0.19/粉 时可追加预算至 $20–30/天。当前「Successful Trading」涨粉成本 $0.58/粉 已具竞争力，以此为基础持续优化素材。</div>
+          </div>
+        </div>
+        <div class="adv-card">
+          <span class="adv-num" style="background:rgba(167,139,250,.18);color:#b8a2fc">02</span>
+          <div>
+            <div class="adv-title">内容素材优化：Reel 留存 + Post 深度</div>
+            <div class="adv-body">针对 Reel 3 秒后高流失率，在视频 5–10 秒处加入强交互视觉（数据图表动态对比），将流量在流失前转化为点击。教育图文可增加「Swap 费用详解」「期货杠杆风险计算」等更具体的交易痛点系列，提升互动深度。CTA 强化：标题末尾统一加入 <em>"Follow @ZEROMarkets for daily trading tips."</em></div>
+          </div>
+        </div>
+        <div class="adv-card">
+          <span class="adv-num" style="background:rgba(251,191,36,.18);color:#fbc840">03</span>
+          <div>
+            <div class="adv-title">落地页转化优化：缩短注册心理距离</div>
+            <div class="adv-body">Meta Ads CTA 链接 Engaged Session 率高达 99%，访客质量极高，但仅 1 次最终注册，瓶颈明显在落地页。建议在落地页首屏增加「新手礼包」或「免费市场分析报告下载」等强诱因，配合 ZERO Markets 监管牌照与用户数量等社会认证，缩短从「点击」到「注册」的心理距离。同步 A/B 测试 CTA 按钮文案与注册表单步骤简化。</div>
+          </div>
+        </div>
+        <div class="adv-card">
+          <span class="adv-num" style="background:rgba(79,158,248,.18);color:#7bb8fb">04</span>
+          <div>
+            <div class="adv-title">预算节奏：缩短单帖周期，提高内容轮换频率</div>
+            <div class="adv-body">Meta Ads 点击红利集中在投放首 1–2 天，之后快速衰减。建议单帖投放周期控制在 <em>3–4 天</em>，表现好的帖子再追加预算，而非拉长同一帖子的消耗窗口，通过更高频的内容轮换维持算法新鲜度。</div>
+          </div>
+        </div>
+        <div class="adv-card">
+          <span class="adv-num" style="background:rgba(34,211,238,.18);color:#5ce0f5">05</span>
+          <div>
+            <div class="adv-title">双渠道分目标考核：KPI 拆分管理</div>
+            <div class="adv-body">建议将两渠道的 KPI 分开考核：IG Boost Post 以<em>涨粉成本</em>（目标 ≤$0.19/粉）为核心指标；Meta Ads Reel 以<em>每次注册 CPA</em> 为核心指标。避免用同一套指标评估定位不同的渠道，导致资源误判。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end part3 -->
+
+  <div class="footer">ZERO Markets · 社媒投放复盘报告 · Apr 20–25, 2026 · 数据截至 Apr 26, 2026</div>
+</div>
+
+<script>
+function showPart(id, btn) {
+  document.querySelectorAll('.part-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.part-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+const gc = 'rgba(255,255,255,0.06)';
+const days = ['Apr 20','Apr 21','Apr 22','Apr 23','Apr 24','Apr 25'];
+const BLUE='#4f9ef8', GREEN='#34d399', PUR='#a78bfa', AMB='#fbbf24', TEAL='#22d3ee';
+
+function ax(yL, extra) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: gc }, ticks: { color: '#5c6370', font: { size: 10.5 }, autoSkip: false, maxRotation: 0 } },
+      y: { grid: { color: gc }, ticks: { color: '#5c6370', font: { size: 10.5 } },
+           title: { display: !!yL, text: yL, color: '#5c6370', font: { size: 10.5 } }, ...(extra||{}) }
+    }
+  };
+}
+
+function grp(id, labels, d1, c1, d2, c2) {
+  const el = document.getElementById(id); if (!el) return;
+  new Chart(el, { type: 'bar', data: { labels, datasets: [
+    { data: d1, backgroundColor: c1 + '99', borderColor: c1, borderWidth: 1, borderRadius: 3 },
+    { data: d2, backgroundColor: c2 + '99', borderColor: c2, borderWidth: 1, borderRadius: 3 }
+  ]}, options: ax() });
+}
+
+function donut(id, labels, data, colors) {
+  const el = document.getElementById(id); if (!el) return;
+  new Chart(el, { type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 0 }]},
+    options: { responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: { legend: { position: 'bottom', labels: { color: '#9aa0ac', font: { size: 10.5 }, boxWidth: 9, padding: 8 }}}}});
+}
+
+// c1 channel overview
+grp('c1',
+  ['花费 ($)','点击 ÷10','展示 ÷1000','主页访问','粉丝增长'],
+  [74.93, 533.7, 443.3, 485, 1], BLUE,
+  [32.85, 50.7, 44.4, 429, 83], GREEN
+);
+
+// c2 c3 pies
+donut('c2', ['Meta Ads 90.9%','IG Boost 9.1%'], [443259,44435], [BLUE, GREEN]);
+donut('c3', ['Meta Ads 93.0%','IG Boost 7.0%'], [416608,31350], ['#6cb4fa','#5ddfa8']);
+
+// c4 CPC trend
+(function(){
+  const el = document.getElementById('c4'); if (!el) return;
+  new Chart(el, { type: 'line', data: { labels: days, datasets: [
+    { data:[null,0.00523,0.01730,0.02116,0.01892,0.01939], borderColor:BLUE, backgroundColor:'transparent', tension:0.35, pointRadius:4, spanGaps:true },
+    { data:[null,0.00909,0.01531,0.01309,null,null], borderColor:BLUE, backgroundColor:'transparent', tension:0.35, pointRadius:4, borderDash:[4,3], spanGaps:false },
+    { data:[0.05364,0.05267,0.05214,0.04849,0.04583,0.05317], borderColor:GREEN, backgroundColor:'transparent', tension:0.35, pointRadius:4 },
+    { data:[0.10700,0.14121,0.14552,0.16333,null,null], borderColor:AMB, backgroundColor:'transparent', tension:0.35, pointRadius:4, borderDash:[4,3], spanGaps:false }
+  ]}, options: { ...ax('CPC ($)'), spanGaps: false }});
+})();
+
+// c5 Post A
+grp('c5',
+  ['花费($)','点击÷10','CPC×100','CPM×10','互动','主页访问','粉丝×10'],
+  [11.19, 107.4, 1.04, 0.56, 44, 408, 10], BLUE,
+  [21.43, 42.6, 5.03, 5.13, 130, 429, 370], GREEN
+);
+
+// c6 Reel B
+grp('c6',
+  ['花费($)','点击÷10','CPC×100','CPM×10','互动†','主页访问†','粉丝×10†'],
+  [63.74, 426.3, 1.50, 2.63, 38, 77, 0], PUR,
+  [11.42, 8.1, 14.10, 43.18, 83, 76, 460], AMB
+);
+
+// c7 retention horizontal
+(function(){
+  const el = document.getElementById('c7'); if (!el) return;
+  new Chart(el, { type: 'bar',
+    data: { labels: ['3秒率（÷展示）','25% 进度','50% 进度','75% 进度','95% 进度'],
+      datasets: [{ data:[11.78,100,40.3,24.4,18.6],
+        backgroundColor:[BLUE, PUR, '#7f77dd','#afa9ec','#cecbf6'], borderRadius:3 }]},
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ grid:{color:gc}, ticks:{color:'#5c6370',callback:v=>v+'%',font:{size:10.5}}, max:115 },
+        y:{ grid:{display:false}, ticks:{color:'#5c6370',font:{size:10.5}} }
+      }}});
+})();
+
+// c7b retention pie
+donut('c7b',
+  ['完整看完 18.6%','75–95% 段 5.8%','50–75% 段 15.9%','25–50% 段 59.7%'],
+  [18.6, 5.8, 15.9, 59.7],
+  [PUR,'#7f77dd','#afa9ec','#cecbf6']
+);
+
+// c8 IG dual axis
+(function(){
+  const el = document.getElementById('c8'); if (!el) return;
+  new Chart(el, { type:'line', data:{ labels:days, datasets:[
+    { data:[1.77,4.53,4.38,4.17,4.40,2.18], borderColor:GREEN, backgroundColor:'transparent', tension:0.35, pointRadius:4, yAxisID:'y' },
+    { data:[1.07,4.66,4.22,1.47,null,null], borderColor:AMB, backgroundColor:'transparent', tension:0.35, pointRadius:4, borderDash:[4,3], spanGaps:false, yAxisID:'y' },
+    { data:[33,86,84,86,96,41], borderColor:GREEN, backgroundColor:'transparent', tension:0.35, pointRadius:3, borderDash:[2,2], yAxisID:'y2' },
+    { data:[10,33,29,9,null,null], borderColor:AMB, backgroundColor:'transparent', tension:0.35, pointRadius:3, borderDash:[5,3], spanGaps:false, yAxisID:'y2' }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, spanGaps:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:{color:gc}, ticks:{color:'#5c6370',font:{size:10.5},autoSkip:false,maxRotation:0} },
+      y:{ grid:{color:gc}, ticks:{color:'#5c6370',font:{size:10.5}}, title:{display:true,text:'花费 ($)',color:'#5c6370',font:{size:10.5}}, position:'left' },
+      y2:{ grid:{display:false}, ticks:{color:'#5c6370',font:{size:10.5}}, title:{display:true,text:'点击量',color:'#5c6370',font:{size:10.5}}, position:'right' }
+    }}});
+})();
+
+// c9 Meta dual axis
+(function(){
+  const el = document.getElementById('c9'); if (!el) return;
+  new Chart(el, { type:'line', data:{ labels:days, datasets:[
+    { data:[null,7.50,2.97,0.72,null,null], borderColor:BLUE, backgroundColor:'transparent', tension:0.35, pointRadius:4, spanGaps:false, yAxisID:'y' },
+    { data:[null,7.50,2.44,25.99,19.88,7.93], borderColor:PUR, backgroundColor:'transparent', tension:0.35, pointRadius:4, spanGaps:true, yAxisID:'y' },
+    { data:[null,825,194,55,null,null], borderColor:BLUE, backgroundColor:'transparent', tension:0.35, pointRadius:3, borderDash:[3,3], spanGaps:false, yAxisID:'y2' },
+    { data:[null,1434,141,1228,1051,409], borderColor:PUR, backgroundColor:'transparent', tension:0.35, pointRadius:3, borderDash:[3,3], spanGaps:true, yAxisID:'y2' }
+  ]}, options:{ responsive:true, maintainAspectRatio:false, spanGaps:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:{color:gc}, ticks:{color:'#5c6370',font:{size:10.5},autoSkip:false,maxRotation:0} },
+      y:{ grid:{color:gc}, ticks:{color:'#5c6370',font:{size:10.5}}, title:{display:true,text:'花费 ($)',color:'#5c6370',font:{size:10.5}}, position:'left' },
+      y2:{ grid:{display:false}, ticks:{color:'#5c6370',font:{size:10.5}}, title:{display:true,text:'点击量',color:'#5c6370',font:{size:10.5}}, position:'right' }
+    }}});
+})();
+</script>
+</body>
+</html>
